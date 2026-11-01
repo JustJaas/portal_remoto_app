@@ -1,5 +1,3 @@
-import 'package:rick_morty_app/domain/character.dart';
-
 class CharacterModel {
   const CharacterModel({
     required this.id,
@@ -38,17 +36,4 @@ class CharacterModel {
   final String originName;
   final String locationName;
   final String image;
-
-  Character toEntity() {
-    return Character(
-      id: id,
-      name: name,
-      status: status,
-      species: species,
-      gender: gender,
-      originName: originName,
-      locationName: locationName,
-      image: image,
-    );
-  }
 }

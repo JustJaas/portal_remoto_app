@@ -1,4 +1,4 @@
-import 'package:rick_morty_app/domain/character.dart';
+import 'package:rick_morty_app/domain/entities/character.dart';
 
 class CharacterUtils {
   static String summary(Character character) {

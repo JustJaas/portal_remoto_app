@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rick_morty_app/domain/character.dart';
+import 'package:rick_morty_app/domain/entities/character.dart';
 import 'package:rick_morty_app/presentation/utils/character_utils.dart';
 import 'package:rick_morty_app/presentation/widgets/character_image.dart';
 import 'package:rick_morty_app/presentation/widgets/character_info_row.dart';

@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:rick_morty_app/data/api_exception.dart';
-import 'package:rick_morty_app/domain/character.dart';
+import 'package:rick_morty_app/domain/errors/api_exception.dart';
+import 'package:rick_morty_app/domain/entities/character.dart';
+import 'package:rick_morty_app/domain/results/result.dart';
 import 'package:rick_morty_app/presentation/providers/characters_repository_provider.dart';
 
 final NotifierProvider<CharactersNotifier, CharactersState> charactersProvider =
@@ -44,38 +45,30 @@ class CharactersNotifier extends Notifier<CharactersState> {
       state = state.copyWith(status: CharactersStatus.loading, query: query);
     }
 
-    try {
-      final List<Character> characters = await ref
-          .read(characterRepositoryProvider)
-          .getCharacters(name: query);
+    final Result<List<Character>> result = await ref
+        .read(characterRepositoryProvider)
+        .getCharacters(name: query);
 
-      if (_disposed || requestId != _requestId) {
-        return;
-      }
+    // Si el notifier murió o ya hay una petición más reciente, se descarta.
+    if (_disposed || requestId != _requestId) {
+      return;
+    }
 
-      state = state.copyWith(
-        status: characters.isEmpty
-            ? CharactersStatus.empty
-            : CharactersStatus.success,
-        characters: characters,
-        query: query,
-      );
-    } on ApiException catch (error) {
-      if (_disposed || requestId != _requestId) {
-        return;
-      }
-      state = state.copyWith(
-        status: CharactersStatus.error,
-        errorMessage: error.message,
-      );
-    } catch (_) {
-      if (_disposed || requestId != _requestId) {
-        return;
-      }
-      state = state.copyWith(
-        status: CharactersStatus.error,
-        errorMessage: 'Ocurrió un error inesperado.',
-      );
+    // El switch es exhaustivo: si falta Success o Failure, no compila.
+    switch (result) {
+      case Success<List<Character>>(:final List<Character> data):
+        state = state.copyWith(
+          status: data.isEmpty
+              ? CharactersStatus.empty
+              : CharactersStatus.success,
+          characters: data,
+          query: query,
+        );
+      case Failure<List<Character>>(:final ApiException error):
+        state = state.copyWith(
+          status: CharactersStatus.error,
+          errorMessage: error.message,
+        );
     }
   }
 }
@@ -92,7 +85,7 @@ class CharactersState {
 
   final CharactersStatus status;
   final List<Character> characters;
-  final String query; // la búsqueda actual
+  final String query;
   final String errorMessage;
 
   CharactersState copyWith({

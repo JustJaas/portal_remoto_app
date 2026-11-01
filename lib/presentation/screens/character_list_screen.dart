@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:rick_morty_app/domain/character.dart';
+import 'package:rick_morty_app/domain/entities/character.dart';
 import 'package:rick_morty_app/presentation/providers/characters_provider.dart';
 import 'package:rick_morty_app/presentation/screens/character_detail_screen.dart';
 import 'package:rick_morty_app/presentation/widgets/character_grid.dart';

@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-import 'package:rick_morty_app/data/character_remote_datasource.dart';
-import 'package:rick_morty_app/data/character_repository.dart';
+import 'package:rick_morty_app/domain/datasources/character_datasource.dart';
+import 'package:rick_morty_app/domain/repositories/character_repository.dart';
+import 'package:rick_morty_app/infrastructure/datasources/character_remote_datasource.dart';
+import 'package:rick_morty_app/infrastructure/repositories/character_repository_impl.dart';
 
 final Provider<http.Client> httpClientProvider = Provider<http.Client>((
   Ref ref,
@@ -11,13 +13,13 @@ final Provider<http.Client> httpClientProvider = Provider<http.Client>((
   return client;
 });
 
-final Provider<CharacterRemoteDataSource> characterRemoteDataSourceProvider =
-    Provider<CharacterRemoteDataSource>(
+final Provider<CharacterDataSourceInterface> characterDataSourceProvider =
+    Provider<CharacterDataSourceInterface>(
       (Ref ref) => CharacterRemoteDataSource(ref.watch(httpClientProvider)),
     );
 
-final Provider<CharacterRepository> characterRepositoryProvider =
-    Provider<CharacterRepository>(
+final Provider<CharacterRepositoryInterface> characterRepositoryProvider =
+    Provider<CharacterRepositoryInterface>(
       (Ref ref) =>
-          CharacterRepository(ref.watch(characterRemoteDataSourceProvider)),
+          CharacterRepositoryImpl(ref.watch(characterDataSourceProvider)),
     );
