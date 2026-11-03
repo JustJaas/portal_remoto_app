@@ -49,12 +49,10 @@ class CharactersNotifier extends Notifier<CharactersState> {
         .read(characterRepositoryProvider)
         .getCharacters(name: query);
 
-    // Si el notifier murió o ya hay una petición más reciente, se descarta.
     if (_disposed || requestId != _requestId) {
       return;
     }
 
-    // El switch es exhaustivo: si falta Success o Failure, no compila.
     switch (result) {
       case Success<List<Character>>(:final List<Character> data):
         state = state.copyWith(

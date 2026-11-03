@@ -20,7 +20,7 @@ class _CharacterSearchFieldState extends State<CharacterSearchField> {
 
   void _handleChanged(String value) {
     widget.onChanged(value);
-    setState(() {}); // para mostrar u ocultar el botón de limpiar
+    setState(() {});
   }
 
   void _clear() {
